@@ -1,0 +1,64 @@
+{
+  "source": "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/LandingView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Authentication",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "Unlimited\nentertainment,\nall in one place",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 28
+        }
+      },
+      {
+        "comment": "",
+        "key": "Your Stage, Your Voice\nEvents Reimagined",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 34
+        }
+      },
+      {
+        "comment": "",
+        "key": "SIGNING IN...",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 51
+        }
+      },
+      {
+        "comment": "",
+        "key": "LOGIN WITH GOOGLE",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "iOS App using Shared Android Logic",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 72
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 88
+        }
+      }
+    ]
+  },
+  "version": 1
+}

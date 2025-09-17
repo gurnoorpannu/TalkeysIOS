@@ -1,0 +1,78 @@
+{
+  "" : {
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys IOS-master.dia",
+    "emit-module-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys IOS-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys IOS-master-emit-module.dia",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys IOS-master.swiftdeps"
+  },
+  "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/Authentication/GoogleSignInManager.swift" : {
+    "const-values" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager.swiftconstvalues",
+    "dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager.d",
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager.dia",
+    "index-unit-output-path" : "/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager.o",
+    "llvm-bc" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager.bc",
+    "object" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager.o",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager.swiftdeps",
+    "swiftmodule" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GoogleSignInManager~partial.swiftmodule"
+  },
+  "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/ContentView.swift" : {
+    "const-values" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/HomeScreen.swift" : {
+    "const-values" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen.swiftconstvalues",
+    "dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen.d",
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen.dia",
+    "index-unit-output-path" : "/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen.o",
+    "llvm-bc" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen.bc",
+    "object" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen.o",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen.swiftdeps",
+    "swiftmodule" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/HomeScreen~partial.swiftmodule"
+  },
+  "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/LandingPage.swift" : {
+    "const-values" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage.swiftconstvalues",
+    "dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage.d",
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage.dia",
+    "index-unit-output-path" : "/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage.o",
+    "llvm-bc" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage.bc",
+    "object" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage.o",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage.swiftdeps",
+    "swiftmodule" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingPage~partial.swiftmodule"
+  },
+  "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/LandingView.swift" : {
+    "const-values" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView.swiftconstvalues",
+    "dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView.d",
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView.dia",
+    "index-unit-output-path" : "/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView.o",
+    "llvm-bc" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView.bc",
+    "object" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView.o",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView.swiftdeps",
+    "swiftmodule" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/LandingView~partial.swiftmodule"
+  },
+  "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/Talkeys_IOSApp.swift" : {
+    "const-values" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp.swiftconstvalues",
+    "dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp.d",
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp.dia",
+    "index-unit-output-path" : "/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp.o",
+    "llvm-bc" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp.bc",
+    "object" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp.o",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp.swiftdeps",
+    "swiftmodule" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/Talkeys_IOSApp~partial.swiftmodule"
+  },
+  "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/gurnoor/StudioProjects/Talkeys IOS/build/Build/Intermediates.noindex/Talkeys IOS.build/Debug-iphonesimulator/Talkeys IOS.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

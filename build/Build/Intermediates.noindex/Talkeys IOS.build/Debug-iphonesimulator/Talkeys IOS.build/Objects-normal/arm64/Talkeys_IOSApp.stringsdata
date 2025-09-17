@@ -1,0 +1,40 @@
+{
+  "source": "/Users/gurnoor/StudioProjects/Talkeys IOS/Talkeys IOS/Talkeys_IOSApp.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "🎉 Welcome to Talkeys!",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 45
+        }
+      },
+      {
+        "comment": "",
+        "key": "Successfully authenticated using\nshared Kotlin Multiplatform logic!",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 49
+        }
+      },
+      {
+        "comment": "",
+        "key": "🔗 Same authentication logic as Android app",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 54
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sign Out",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 66
+        }
+      }
+    ]
+  },
+  "version": 1
+}

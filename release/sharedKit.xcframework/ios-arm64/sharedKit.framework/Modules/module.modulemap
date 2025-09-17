@@ -1,0 +1,8 @@
+framework module "sharedKit" {
+    umbrella header "sharedKit.h"
+
+    export *
+    module * { export * }
+
+    use Foundation
+}
