@@ -5,19 +5,7 @@ import Foundation
 struct ExploreEventsView: View {
     @StateObject private var eventRepository = EventRepository.shared
     @State private var groupedEvents: [String: [EventResponse]] = [:]
-    @State private var searchText = ""
-    @State private var selectedCategory = "All"
-    @State private var showFilterSheet = false
     @State private var showLiveEvents = false
-    
-    // Sample categories for filtering
-    private let categories = ["All", "Music", "Sports", "Food", "Art", "Tech", "Comedy", "Business"]
-    
-    // Grid layout configuration
-    private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
-    ]
     
     var body: some View {
         NavigationView {
@@ -30,10 +18,10 @@ struct ExploreEventsView: View {
                     .clipped()
                 
                 VStack(spacing: 0) {
-                    // Header with search and filter
+                    // Header with filter buttons
                     headerView
                     
-                    // Events Grid or Category Sections
+                    // Events Content
                     if eventRepository.isLoading {
                         loadingView
                     } else if let error = eventRepository.errorMessage {
@@ -50,31 +38,21 @@ struct ExploreEventsView: View {
         .onAppear {
             loadEvents()
         }
-        .sheet(isPresented: $showFilterSheet) {
-            filterSheetView
-        }
     }
     
     // MARK: - Header View
     private var headerView: some View {
-        VStack(spacing: 16) {
-            // Title and Filter Button
-            HStack {
-                Text("Explore Events")
-                    .font(.custom("Urbanist-Regular", size: 28))
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                
-                Spacer()
-                
-                Button(action: {
-                    showFilterSheet = true
-                }) {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                        .font(.system(size: 24))
-                        .foregroundColor(Color(red: 112/255, green: 60/255, blue: 160/255))
-                }
-            }
+        VStack(alignment: .leading, spacing: 0) {
+            // Title
+            Text("Explore Events")
+                .font(.custom("Urbanist-Regular", size: 20))
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .padding(.top, 12)
+                .padding(.leading, 19)
+            
+            Spacer()
+                .frame(height: 16)
             
             // Live/Past Events Filter Buttons
             HStack(spacing: 12) {
@@ -90,7 +68,7 @@ struct ExploreEventsView: View {
                 )
                 
                 FilterButton(
-                    title: "Past Events", 
+                    title: "Past Events",
                     isSelected: !showLiveEvents,
                     action: {
                         if showLiveEvents {
@@ -100,81 +78,14 @@ struct ExploreEventsView: View {
                     }
                 )
             }
-            
-            // Search Bar
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 16))
-                
-                TextField("Search events...", text: $searchText)
-                    .font(.custom("Urbanist-Regular", size: 16))
-                    .foregroundColor(.white)
-                    .accentColor(Color(red: 112/255, green: 60/255, blue: 160/255))
-                    .onChange(of: searchText) { _ in
-                        updateGroupedEvents()
-                    }
-                
-                if !searchText.isEmpty {
-                    Button(action: {
-                        searchText = ""
-                        updateGroupedEvents()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 16))
-                    }
-                }
-            }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color(red: 38/255, green: 38/255, blue: 38/255))
-            .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(red: 60/255, green: 60/255, blue: 60/255), lineWidth: 1)
-            )
-            
-            // Category Filter Pills
-            if selectedCategory != "All" {
-                HStack {
-                    Text("Filtered by: ")
-                        .font(.custom("Urbanist-Regular", size: 14))
-                        .foregroundColor(.gray)
-                    
-                    Button(action: {
-                        selectedCategory = "All"
-                        updateGroupedEvents()
-                    }) {
-                        HStack(spacing: 4) {
-                            Text(selectedCategory)
-                                .font(.custom("Urbanist-Regular", size: 14))
-                                .fontWeight(.medium)
-                                .foregroundColor(.white)
-                            
-                            Image(systemName: "xmark")
-                                .font(.system(size: 12))
-                                .foregroundColor(.white)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color(red: 112/255, green: 60/255, blue: 160/255))
-                        .cornerRadius(16)
-                    }
-                    
-                    Spacer()
-                }
-            }
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 10)
-        .padding(.bottom, 16)
     }
     
     // MARK: - Events Content View
     private var eventsContentView: some View {
         ScrollView {
-            LazyVStack(spacing: 24) {
+            LazyVStack(spacing: 16) {
                 // Show events grouped by category
                 ForEach(Array(groupedEvents.keys.sorted()), id: \.self) { category in
                     if let categoryEvents = groupedEvents[category], !categoryEvents.isEmpty {
@@ -185,8 +96,11 @@ struct ExploreEventsView: View {
                         )
                     }
                 }
+                
+                // Bottom spacing
+                Spacer()
+                    .frame(height: 8)
             }
-            .padding(.horizontal, 20)
             .padding(.bottom, 100) // Extra padding for bottom tab bar
         }
         .modifier(RefreshableModifier {
@@ -200,57 +114,97 @@ struct ExploreEventsView: View {
         let events: [EventResponse]
         let onEventTapped: (EventResponse) -> Void
         
-        private let columns = [
-            GridItem(.flexible(), spacing: 12),
-            GridItem(.flexible(), spacing: 12)
-        ]
-        
         var body: some View {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 0) {
                 // Category Title
                 Text(category)
                     .font(.custom("Urbanist-Regular", size: 18))
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
+                    .padding(.leading, 16)
+                    .padding(.bottom, 12)
                 
-                // Events Grid
-                LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(events.indices, id: \.self) { index in
-                        let event = events[index]
-                        
-                        EventCard(
-                            event: convertToEventCard(event),
-                            onClick: {
-                                onEventTapped(event)
-                            },
-                            isCenter: false,
-                            isFocused: true
-                        )
-                        .animation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0).delay(Double(index) * 0.05), value: events.count)
+                // Horizontal Scrolling Events
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(events.indices, id: \.self) { index in
+                            let event = events[index]
+                            
+                            EventCard(
+                                event: event,
+                                onClick: {
+                                    onEventTapped(event)
+                                },
+                                isCenter: false,
+                                isFocused: true
+                            )
+                            .animation(
+                                .spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0)
+                                    .delay(Double(index) * 0.05),
+                                value: events.count
+                            )
+                        }
                     }
+                    .padding(.leading, 16)
+                    .padding(.trailing, 80)
                 }
             }
-        }
-        
-        // Convert EventResponse to EventCard compatible format
-        private func convertToEventCard(_ event: EventResponse) -> EventResponse {
-            return event // Since both models are now the same, just return the event
         }
     }
     
     // MARK: - Loading View
     private var loadingView: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-                .scaleEffect(1.5)
-                .accentColor(Color(red: 112/255, green: 60/255, blue: 160/255))
-            
-            Text("Loading events...")
-                .font(.custom("Urbanist-Regular", size: 16))
-                .foregroundColor(.white)
+        VStack(spacing: 0) {
+            ForEach(0..<3, id: \.self) { _ in
+                LoadingCategorySection()
+                    .padding(.bottom, 16)
+            }
+            Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.top, 100)
+        .padding(.top, 16)
+    }
+    
+    struct LoadingCategorySection: View {
+        var body: some View {
+            VStack(alignment: .leading, spacing: 0) {
+                // Loading category title
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
+                    .frame(width: 120, height: 20)
+                    .padding(.leading, 16)
+                    .padding(.bottom, 12)
+                
+                // Loading cards row
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(0..<3, id: \.self) { _ in
+                            SkeletonEventCard()
+                        }
+                    }
+                    .padding(.leading, 16)
+                    .padding(.trailing, 80)
+                }
+            }
+        }
+    }
+    
+    struct SkeletonEventCard: View {
+        var body: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
+                    .frame(width: 160, height: 200)
+                
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
+                    .frame(width: 120, height: 16)
+                
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
+                    .frame(width: 80, height: 12)
+            }
+            .frame(width: 160)
+        }
     }
     
     // MARK: - Error View
@@ -263,8 +217,9 @@ struct ExploreEventsView: View {
             
             Text(error)
                 .font(.custom("Urbanist-Regular", size: 16))
-                .foregroundColor(.gray)
+                .foregroundColor(.white.opacity(0.8))
                 .multilineTextAlignment(.center)
+                .padding(.horizontal, 16)
             
             HStack(spacing: 12) {
                 Button("Dismiss") {
@@ -285,113 +240,31 @@ struct ExploreEventsView: View {
                 }
                 .padding(.horizontal, 24)
                 .padding(.vertical, 12)
-                .background(Color(red: 112/255, green: 60/255, blue: 160/255))
+                .background(Color(red: 138/255, green: 68/255, blue: 203/255))
                 .cornerRadius(8)
                 .foregroundColor(.white)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, 32)
-        .padding(.top, 100)
     }
     
     // MARK: - Empty State View
     private var emptyStateView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 8) {
             Text(showLiveEvents ? "No live events available" : "No past events available")
                 .font(.custom("Urbanist-Regular", size: 18))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
+                .multilineTextAlignment(.center)
             
             Text("Check back later for new events")
                 .font(.custom("Urbanist-Regular", size: 16))
-                .foregroundColor(.gray)
+                .foregroundColor(.white.opacity(0.7))
+                .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.top, 100)
-    }
-    
-    // MARK: - Filter Sheet
-    private var filterSheetView: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 24) {
-                Text("Filter Events")
-                    .font(.custom("Urbanist-Regular", size: 24))
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Categories")
-                        .font(.custom("Urbanist-Regular", size: 18))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                    
-                    LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
-                    ], spacing: 12) {
-                        ForEach(categories, id: \.self) { category in
-                            Button(action: {
-                                selectedCategory = category
-                            }) {
-                                Text(category)
-                                    .font(.custom("Urbanist-Regular", size: 16))
-                                    .fontWeight(.medium)
-                                    .foregroundColor(selectedCategory == category ? .white : .gray)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 12)
-                                    .frame(maxWidth: .infinity)
-                                    .background(
-                                        selectedCategory == category ?
-                                        Color(red: 112/255, green: 60/255, blue: 160/255) :
-                                        Color(red: 38/255, green: 38/255, blue: 38/255)
-                                    )
-                                    .cornerRadius(12)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(
-                                                selectedCategory == category ?
-                                                Color(red: 112/255, green: 60/255, blue: 160/255) :
-                                                Color(red: 60/255, green: 60/255, blue: 60/255),
-                                                lineWidth: 1
-                                            )
-                                    )
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                }
-                
-                Spacer()
-                
-                // Apply Button
-                Button(action: {
-                    updateGroupedEvents()
-                    showFilterSheet = false
-                }) {
-                    Text("Apply Filters")
-                        .font(.custom("Urbanist-Regular", size: 18))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(Color(red: 112/255, green: 60/255, blue: 160/255))
-                        .cornerRadius(12)
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 20)
-            }
-            .background(
-                Image("background")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
-                    .clipped()
-            )
-            .navigationBarHidden(true)
-        }
+        .padding(.horizontal, 32)
     }
     
     // MARK: - Filter Button Component
@@ -406,12 +279,11 @@ struct ExploreEventsView: View {
                     .font(.custom("Urbanist-Regular", size: 14))
                     .fontWeight(isSelected ? .bold : .regular)
                     .foregroundColor(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
                     .frame(maxWidth: .infinity)
+                    .frame(height: 40)
                     .background(
                         isSelected ?
-                        Color(red: 112/255, green: 60/255, blue: 160/255) :
+                        Color(red: 138/255, green: 68/255, blue: 203/255) :
                         Color.white.opacity(0.25)
                     )
                     .cornerRadius(20)
@@ -429,24 +301,6 @@ struct ExploreEventsView: View {
                 return event.isLive == true
             } else {
                 return event.isLive != true
-            }
-        }
-        
-        // Filter by category
-        if selectedCategory != "All" {
-            filtered = filtered.filter { event in
-                event.category.lowercased() == selectedCategory.lowercased()
-            }
-        }
-        
-        // Filter by search text
-        if !searchText.isEmpty {
-            filtered = filtered.filter { event in
-                event.name.lowercased().contains(searchText.lowercased()) ||
-                (event.location?.lowercased().contains(searchText.lowercased()) == true) ||
-                event.category.lowercased().contains(searchText.lowercased()) ||
-                (event.eventDescription?.lowercased().contains(searchText.lowercased()) == true) ||
-                (event.organizerName?.lowercased().contains(searchText.lowercased()) == true)
             }
         }
         
@@ -489,7 +343,6 @@ struct ExploreEventsView: View {
         // TODO: Navigate to event detail view
         // You can implement navigation here
     }
-    
 }
 
 // MARK: - iOS Version Compatibility
