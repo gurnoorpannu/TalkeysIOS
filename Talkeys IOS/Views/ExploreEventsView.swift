@@ -651,7 +651,7 @@ struct AnimatedCategorySectionView: View {
                 }
                 .padding(.leading, 16)
                 .padding(.trailing, 80)
-                .padding(.vertical, 30) // Extra vertical padding to prevent clipping
+                .padding(.vertical, 8) // Minimal vertical padding to prevent clipping
             }
             // SwiftUI doesn't clip by default, so rotation overflow is allowed
         }
@@ -680,8 +680,8 @@ struct AnimatedEventCard: View {
             anchor: .center, // Rotate around center point
             perspective: 0.5 // Add perspective for 3D effect
         )
-        .padding(.vertical, 20) // Add vertical padding to prevent clipping
-        .padding(.horizontal, 10) // Add horizontal padding for rotation space
+        .padding(.vertical, 6) // Minimal vertical padding to prevent clipping
+        .padding(.horizontal, 4) // Minimal horizontal padding for rotation space
         // SwiftUI allows overflow by default for 3D transforms
         .opacity(isVisible ? 1.0 : 0.0)
         .scaleEffect(isVisible ? 1.0 : 0.8)
