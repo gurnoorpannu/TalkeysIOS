@@ -7,6 +7,10 @@ struct ExploreEventsView: View {
     @StateObject private var authViewModel = AuthViewModel()
     @State private var groupedEvents: [String: [EventResponse]] = [:]
     @State private var showLiveEvents = true
+    @State private var scrollOffset: CGFloat = 0
+    @State private var lastScrollOffset: CGFloat = 0
+    @State private var isHeaderVisible = true
+    @State private var dragOffset: CGFloat = 0
     
     var body: some View {
         NavigationView {
@@ -29,8 +33,11 @@ struct ExploreEventsView: View {
                         }
                     )
                     
-                    // Header with filter buttons
-                    headerView
+                    // Header with filter buttons (collapsible)
+                    if isHeaderVisible {
+                        headerView
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                    }
                     
                     // Events Content
                     if eventRepository.isLoading {
@@ -99,29 +106,49 @@ struct ExploreEventsView: View {
     
     // MARK: - Events Content View
     private var eventsContentView: some View {
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                // Show events grouped by category
-                ForEach(Array(groupedEvents.keys.sorted()), id: \.self) { category in
-                    if let categoryEvents = groupedEvents[category], !categoryEvents.isEmpty {
-                        CategorySectionView(
-                            category: category,
-                            events: categoryEvents,
-                            onEventTapped: handleEventTap
-                        )
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    // Show events grouped by category
+                    ForEach(Array(groupedEvents.keys.sorted()), id: \.self) { category in
+                        if let categoryEvents = groupedEvents[category], !categoryEvents.isEmpty {
+                            AnimatedCategorySectionView(
+                                category: category,
+                                events: categoryEvents,
+                                onEventTapped: handleEventTap
+                            )
+                        }
                     }
+                    
+                    // Bottom spacing
+                    Spacer()
+                        .frame(height: 8)
                 }
-                
-                // Bottom spacing
-                Spacer()
-                    .frame(height: 8)
+                .padding(.top, 20) // Add padding above first heading
+                .padding(.bottom, 100) // Extra padding for bottom tab bar
+                .background(
+                    // Invisible scroll detector
+                    GeometryReader { geometry in
+                        Color.clear
+                            .preference(key: ScrollOffsetPreferenceKey.self, 
+                                      value: geometry.frame(in: .global).minY)
+                    }
+                )
             }
-            .padding(.top, 20) // Add padding above first heading
-            .padding(.bottom, 100) // Extra padding for bottom tab bar
+            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                handleScrollOffset(value)
+            }
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        let currentOffset = value.translation.y
+                        handleDragOffset(currentOffset)
+                    }
+            )
+            .modifier(RefreshableModifier {
+                await loadEventsWithRefresh()
+            })
         }
-        .modifier(RefreshableModifier {
-            await loadEventsWithRefresh()
-        })
     }
     
     // MARK: - Category Section View
@@ -496,6 +523,58 @@ struct ExploreEventsView: View {
         // TODO: Navigate to event detail view
         // You can implement navigation here
     }
+    
+    // MARK: - Scroll Handling
+    private func handleScrollOffset(_ offset: CGFloat) {
+        let scrollDelta = offset - lastScrollOffset
+        let threshold: CGFloat = 10 // Minimum scroll distance to trigger
+        
+        // Debug logging
+        print("📊 Scroll offset: \(offset), delta: \(scrollDelta), headerVisible: \(isHeaderVisible)")
+        
+        // Only react to significant scroll movements
+        if abs(scrollDelta) > threshold {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                if scrollDelta < -threshold {
+                    // Scrolling down - hide header
+                    if isHeaderVisible {
+                        print("🔽 Hiding header (scrolling down)")
+                        isHeaderVisible = false
+                    }
+                } else if scrollDelta > threshold {
+                    // Scrolling up - show header
+                    if !isHeaderVisible {
+                        print("🔼 Showing header (scrolling up)")
+                        isHeaderVisible = true
+                    }
+                }
+            }
+            lastScrollOffset = offset
+        }
+    }
+    
+    // MARK: - Drag Handling (Alternative scroll detection)
+    private func handleDragOffset(_ offset: CGFloat) {
+        let threshold: CGFloat = 30
+        
+        print("🖱️ Drag offset: \(offset), headerVisible: \(isHeaderVisible)")
+        
+        withAnimation(.easeInOut(duration: 0.3)) {
+            if offset < -threshold {
+                // Dragging up (scrolling down) - hide header
+                if isHeaderVisible {
+                    print("🔽 Hiding header (drag up)")
+                    isHeaderVisible = false
+                }
+            } else if offset > threshold {
+                // Dragging down (scrolling up) - show header
+                if !isHeaderVisible {
+                    print("🔼 Showing header (drag down)")
+                    isHeaderVisible = true
+                }
+            }
+        }
+    }
 }
 
 // MARK: - iOS Version Compatibility
@@ -510,6 +589,103 @@ struct RefreshableModifier: ViewModifier {
                 }
         } else {
             content
+        }
+    }
+}
+
+// MARK: - Scroll Offset Preference Key
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+// MARK: - Animated Category Section View with Card Rotation
+struct AnimatedCategorySectionView: View {
+    let category: String
+    let events: [EventResponse]
+    let onEventTapped: (EventResponse) -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Category Title
+            Text(category)
+                .font(.custom("Urbanist-Regular", size: 18))
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+                .padding(.leading, 16)
+                .padding(.bottom, 12)
+            
+            // Horizontal Scrolling Events with Rotation Animation
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(events.indices, id: \.self) { index in
+                        let event = events[index]
+                        
+                        AnimatedEventCard(
+                            event: event,
+                            onClick: {
+                                onEventTapped(event)
+                            },
+                            animationDelay: Double(index) * 0.1
+                        )
+                    }
+                }
+                .padding(.leading, 16)
+                .padding(.trailing, 80)
+                .padding(.vertical, 30) // Extra vertical padding to prevent clipping
+            }
+            .clipped(false) // Allow overflow for rotation
+        }
+    }
+}
+
+// MARK: - Animated Event Card with Rotation Effect
+struct AnimatedEventCard: View {
+    let event: EventResponse
+    let onClick: () -> Void
+    let animationDelay: Double
+    
+    @State private var rotationY: Double = 0
+    @State private var isVisible = false
+    
+    var body: some View {
+        EventCard(
+            event: event,
+            onClick: onClick,
+            isCenter: false,
+            isFocused: true
+        )
+        .rotation3DEffect(
+            .degrees(rotationY),
+            axis: (x: 0, y: 1, z: 0), // Rotate around Y-axis (vertical)
+            anchor: .center, // Rotate around center point
+            perspective: 0.5 // Add perspective for 3D effect
+        )
+        .padding(.vertical, 20) // Add vertical padding to prevent clipping
+        .padding(.horizontal, 10) // Add horizontal padding for rotation space
+        .clipped(false) // Disable clipping to allow rotation overflow
+        .opacity(isVisible ? 1.0 : 0.0)
+        .scaleEffect(isVisible ? 1.0 : 0.8)
+        .onAppear {
+            // Entrance animation
+            withAnimation(.easeOut(duration: 0.6).delay(animationDelay)) {
+                isVisible = true
+            }
+            
+            // Continuous 3D rotation animation around center axis
+            withAnimation(
+                .easeInOut(duration: 6.0)
+                .repeatForever(autoreverses: true)
+                .delay(animationDelay)
+            ) {
+                rotationY = 8.0 // 8-degree 3D rotation for visible effect
+            }
+        }
+        .onDisappear {
+            rotationY = 0
+            isVisible = false
         }
     }
 }
