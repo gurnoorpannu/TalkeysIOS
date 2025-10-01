@@ -4,6 +4,7 @@ import Foundation
 // MARK: - Explore Events View
 struct ExploreEventsView: View {
     @StateObject private var eventRepository = EventRepository.shared
+    @StateObject private var authViewModel = AuthViewModel()
     @State private var groupedEvents: [String: [EventResponse]] = [:]
     @State private var showLiveEvents = true
     
@@ -19,7 +20,14 @@ struct ExploreEventsView: View {
                 
                 VStack(spacing: 0) {
                     // Top Bar
-                    HomeTopBar()
+                    HomeTopBar(
+                        authViewModel: authViewModel,
+                        onLogoTap: {
+                            // Navigate to home - equivalent to navController.navigate("home")
+                            print("🏠 Logo tapped - Navigate to home")
+                            // TODO: Implement actual navigation when home screen is ready
+                        }
+                    )
                     
                     // Header with filter buttons
                     headerView
@@ -40,6 +48,10 @@ struct ExploreEventsView: View {
         }
         .onAppear {
             loadEvents()
+            // Ensure user data is loaded for TopBar
+            if authViewModel.currentUser == nil && !authViewModel.isCheckingToken {
+                authViewModel.checkExistingAuth()
+            }
         }
     }
     
