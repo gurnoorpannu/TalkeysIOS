@@ -39,6 +39,23 @@ struct ExploreEventsView: View {
                             .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     
+                    // Debug button (remove in production)
+                    HStack {
+                        Button("Toggle Header") {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isHeaderVisible.toggle()
+                            }
+                        }
+                        .padding(8)
+                        .background(Color.red.opacity(0.7))
+                        .foregroundColor(.white)
+                        .cornerRadius(4)
+                        .font(.caption)
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 16)
+                    
                     // Events Content
                     if eventRepository.isLoading {
                         loadingView
@@ -141,7 +158,7 @@ struct ExploreEventsView: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        let currentOffset = value.translation.y
+                        let currentOffset = value.translation.height
                         handleDragOffset(currentOffset)
                     }
             )
@@ -636,7 +653,7 @@ struct AnimatedCategorySectionView: View {
                 .padding(.trailing, 80)
                 .padding(.vertical, 30) // Extra vertical padding to prevent clipping
             }
-            .clipped(false) // Allow overflow for rotation
+            // SwiftUI doesn't clip by default, so rotation overflow is allowed
         }
     }
 }
@@ -665,7 +682,7 @@ struct AnimatedEventCard: View {
         )
         .padding(.vertical, 20) // Add vertical padding to prevent clipping
         .padding(.horizontal, 10) // Add horizontal padding for rotation space
-        .clipped(false) // Disable clipping to allow rotation overflow
+        // SwiftUI allows overflow by default for 3D transforms
         .opacity(isVisible ? 1.0 : 0.0)
         .scaleEffect(isVisible ? 1.0 : 0.8)
         .onAppear {
