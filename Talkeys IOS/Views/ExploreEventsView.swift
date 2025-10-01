@@ -39,22 +39,7 @@ struct ExploreEventsView: View {
                             .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     
-                    // Debug button (remove in production)
-                    HStack {
-                        Button("Toggle Header") {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isHeaderVisible.toggle()
-                            }
-                        }
-                        .padding(8)
-                        .background(Color.red.opacity(0.7))
-                        .foregroundColor(.white)
-                        .cornerRadius(4)
-                        .font(.caption)
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal, 16)
+
                     
                     // Events Content
                     if eventRepository.isLoading {
@@ -126,6 +111,15 @@ struct ExploreEventsView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: 16) {
+                    // Scroll position detector at the top
+                    GeometryReader { geometry in
+                        let offset = geometry.frame(in: .named("scrollCoordinate")).minY
+                        Color.clear
+                            .preference(key: ScrollOffsetPreferenceKey.self, value: offset)
+                    }
+                    .frame(height: 0)
+                    .id("scrollTop")
+                    
                     // Show events grouped by category
                     ForEach(Array(groupedEvents.keys.sorted()), id: \.self) { category in
                         if let categoryEvents = groupedEvents[category], !categoryEvents.isEmpty {
@@ -143,25 +137,11 @@ struct ExploreEventsView: View {
                 }
                 .padding(.top, 20) // Add padding above first heading
                 .padding(.bottom, 100) // Extra padding for bottom tab bar
-                .background(
-                    // Invisible scroll detector
-                    GeometryReader { geometry in
-                        Color.clear
-                            .preference(key: ScrollOffsetPreferenceKey.self, 
-                                      value: geometry.frame(in: .global).minY)
-                    }
-                )
             }
+            .coordinateSpace(name: "scrollCoordinate")
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                 handleScrollOffset(value)
             }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        let currentOffset = value.translation.height
-                        handleDragOffset(currentOffset)
-                    }
-            )
             .modifier(RefreshableModifier {
                 await loadEventsWithRefresh()
             })
@@ -543,52 +523,22 @@ struct ExploreEventsView: View {
     
     // MARK: - Scroll Handling
     private func handleScrollOffset(_ offset: CGFloat) {
-        let scrollDelta = offset - lastScrollOffset
-        let threshold: CGFloat = 10 // Minimum scroll distance to trigger
+        // Simple threshold-based approach
+        let hideThreshold: CGFloat = -50 // Hide header when scrolled down 50px
+        let showThreshold: CGFloat = -20 // Show header when scrolled up to 20px
         
         // Debug logging
-        print("📊 Scroll offset: \(offset), delta: \(scrollDelta), headerVisible: \(isHeaderVisible)")
+        print("📊 Scroll offset: \(offset), headerVisible: \(isHeaderVisible)")
         
-        // Only react to significant scroll movements
-        if abs(scrollDelta) > threshold {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                if scrollDelta < -threshold {
-                    // Scrolling down - hide header
-                    if isHeaderVisible {
-                        print("🔽 Hiding header (scrolling down)")
-                        isHeaderVisible = false
-                    }
-                } else if scrollDelta > threshold {
-                    // Scrolling up - show header
-                    if !isHeaderVisible {
-                        print("🔼 Showing header (scrolling up)")
-                        isHeaderVisible = true
-                    }
-                }
-            }
-            lastScrollOffset = offset
-        }
-    }
-    
-    // MARK: - Drag Handling (Alternative scroll detection)
-    private func handleDragOffset(_ offset: CGFloat) {
-        let threshold: CGFloat = 30
-        
-        print("🖱️ Drag offset: \(offset), headerVisible: \(isHeaderVisible)")
-        
-        withAnimation(.easeInOut(duration: 0.3)) {
-            if offset < -threshold {
-                // Dragging up (scrolling down) - hide header
-                if isHeaderVisible {
-                    print("🔽 Hiding header (drag up)")
-                    isHeaderVisible = false
-                }
-            } else if offset > threshold {
-                // Dragging down (scrolling up) - show header
-                if !isHeaderVisible {
-                    print("🔼 Showing header (drag down)")
-                    isHeaderVisible = true
-                }
+        withAnimation(.easeInOut(duration: 0.25)) {
+            if offset < hideThreshold && isHeaderVisible {
+                // Scrolled down enough - hide header
+                print("🔽 Hiding header (scrolled down)")
+                isHeaderVisible = false
+            } else if offset > showThreshold && !isHeaderVisible {
+                // Scrolled back up - show header
+                print("🔼 Showing header (scrolled up)")
+                isHeaderVisible = true
             }
         }
     }
