@@ -144,7 +144,7 @@ struct EventCard: View {
     private var imageHeight: CGFloat { isFocused ? 165 : 130 }
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             // Image Section
             AsyncImage(url: URL(string: event.photographs?.first ?? "")) { image in
                 image
@@ -154,7 +154,7 @@ struct EventCard: View {
                 Rectangle()
                     .fill(Color(red: 167/255, green: 167/255, blue: 167/255))
             }
-            .frame(width: cardWidth - 4, height: imageHeight)
+            .frame(width: cardWidth, height: imageHeight)
             .clipped()
             .cornerRadius(8.18715, corners: [.topLeft, .topRight])
             
@@ -214,9 +214,12 @@ struct EventCard: View {
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(width: cardWidth, height: cardHeight)
-        .background(Color(red: 38/255, green: 38/255, blue: 38/255))
-        .cornerRadius(15)
+        .frame(width: cardWidth, height: cardHeight, alignment: .top)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color(red: 38/255, green: 38/255, blue: 38/255))
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
             RoundedRectangle(cornerRadius: 15)
                 .stroke(Color(red: 112/255, green: 60/255, blue: 160/255), lineWidth: 2)

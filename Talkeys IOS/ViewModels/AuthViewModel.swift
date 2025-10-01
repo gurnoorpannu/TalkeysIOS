@@ -25,8 +25,8 @@ class AuthViewModel: ObservableObject {
     
     // MARK: - Initialization
     init() {
-        // Initialize shared KMP authentication
-        SharedModuleInitializerKt.doInitKoin()
+        // Initialize shared KMP authentication safely
+        KoinInitializer.shared.initializeKoin()
         
         let apiClient = ApiClient()
         let googleSignInProvider = IOSGoogleSignInProvider()
@@ -38,8 +38,8 @@ class AuthViewModel: ObservableObject {
             tokenStorage: tokenStorage
         )
         
-        // Automatically check for existing auth on init
-        checkExistingAuth()
+        // Don't automatically check auth on init to prevent loops
+        // checkExistingAuth() will be called manually when needed
     }
     
     // MARK: - Public Methods
@@ -288,5 +288,25 @@ extension AuthViewModel {
     /// Get user initials for avatar
     var userInitials: String {
         String(currentUser?.name.prefix(1).uppercased() ?? "U")
+    }
+}
+
+// MARK: - Koin Initializer Singleton
+class KoinInitializer {
+    static let shared = KoinInitializer()
+    private var isInitialized = false
+    
+    private init() {}
+    
+    func initializeKoin() {
+        guard !isInitialized else {
+            print("🔄 Koin already initialized, skipping...")
+            return
+        }
+        
+        print("🚀 Initializing Koin...")
+        SharedModuleInitializerKt.doInitKoin()
+        isInitialized = true
+        print("✅ Koin initialized successfully")
     }
 }

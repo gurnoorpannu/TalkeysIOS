@@ -92,35 +92,40 @@ struct MainAppView: View {
     private func checkExistingAuthentication() {
         print("🔍 Checking existing authentication...")
         
-        // Check if we have a valid token stored locally
-        if TokenManager.shared.isTokenValid() {
-            print("✅ Valid token found, attempting auto-login...")
-            
-            // Create AuthViewModel to check backend authentication
-            let authViewModel = AuthViewModel()
-            
-            Task {
-                // Wait for AuthViewModel to complete its authentication check
-                while authViewModel.isCheckingToken {
-                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
-                }
-                
+        // Simple timeout-based check to prevent infinite loading
+        Task {
+            // Add a maximum timeout of 3 seconds
+            let timeoutTask = Task {
+                try? await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
                 await MainActor.run {
-                    // Check if AuthViewModel successfully authenticated
-                    if authViewModel.isLoggedIn {
-                        print("✅ Auto-login successful")
-                        isLoggedIn = true
-                    } else {
-                        print("❌ Auto-login failed, showing login screen")
+                    if isCheckingAuth {
+                        print("⏰ Authentication check timed out, showing login screen")
                         isLoggedIn = false
+                        isCheckingAuth = false
                     }
-                    isCheckingAuth = false
                 }
             }
-        } else {
-            print("❌ No valid token found, showing login screen")
-            isLoggedIn = false
-            isCheckingAuth = false
+            
+            // Check if we have a valid token stored locally
+            if TokenManager.shared.isTokenValid() {
+                print("✅ Valid token found, attempting quick validation...")
+                
+                // Simple validation - if token exists and is valid, assume user is logged in
+                // This avoids the complex backend check that was causing issues
+                await MainActor.run {
+                    print("✅ Auto-login successful (token-based)")
+                    isLoggedIn = true
+                    isCheckingAuth = false
+                    timeoutTask.cancel()
+                }
+            } else {
+                print("❌ No valid token found, showing login screen")
+                await MainActor.run {
+                    isLoggedIn = false
+                    isCheckingAuth = false
+                    timeoutTask.cancel()
+                }
+            }
         }
     }
     
@@ -158,6 +163,11 @@ struct SplashLoadingView: View {
                     .font(.system(size: 16))
                     .foregroundColor(.white.opacity(0.8))
                     .padding(.top, 16)
+                
+                Text("This should only take a moment...")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 8)
                 
                 Spacer()
             }

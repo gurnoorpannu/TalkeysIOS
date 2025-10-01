@@ -111,11 +111,8 @@ struct LandingPage: View {
             // Sync with AuthViewModel state
             syncAuthState()
             
-            // Only check auth if we're not already logged in
-            // (Main app handles initial auth check)
-            if !authViewModel.isLoggedIn && !authViewModel.isCheckingToken {
-                authViewModel.checkExistingAuth()
-            }
+            // Don't automatically check auth - main app handles this
+            // This prevents duplicate auth checks and infinite loops
         }
         .onChange(of: authViewModel.isLoggedIn) { newValue in
             // Sync navigation state with AuthViewModel

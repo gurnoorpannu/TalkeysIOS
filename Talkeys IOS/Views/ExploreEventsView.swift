@@ -5,7 +5,7 @@ import Foundation
 struct ExploreEventsView: View {
     @StateObject private var eventRepository = EventRepository.shared
     @State private var groupedEvents: [String: [EventResponse]] = [:]
-    @State private var showLiveEvents = false
+    @State private var showLiveEvents = true
     
     var body: some View {
         NavigationView {
@@ -18,6 +18,9 @@ struct ExploreEventsView: View {
                     .clipped()
                 
                 VStack(spacing: 0) {
+                    // Top Bar
+                    HomeTopBar()
+                    
                     // Header with filter buttons
                     headerView
                     
@@ -48,11 +51,11 @@ struct ExploreEventsView: View {
                 .font(.custom("Urbanist-Regular", size: 20))
                 .fontWeight(.bold)
                 .foregroundColor(.white)
-                .padding(.top, 12)
-                .padding(.leading, 19)
+                .padding(.top, 8)
+                .padding(.leading, 16)
             
             Spacer()
-                .frame(height: 16)
+                .frame(height: 12)
             
             // Live/Past Events Filter Buttons
             HStack(spacing: 12) {
@@ -101,6 +104,7 @@ struct ExploreEventsView: View {
                 Spacer()
                     .frame(height: 8)
             }
+            .padding(.top, 20) // Add padding above first heading
             .padding(.bottom, 100) // Extra padding for bottom tab bar
         }
         .modifier(RefreshableModifier {
@@ -169,7 +173,7 @@ struct ExploreEventsView: View {
                 Spacer()
                     .frame(height: 8)
             }
-            .padding(.top, 16)
+            .padding(.top, 20) // Match real content top padding
             .padding(.bottom, 100) // Match real content bottom padding
         }
     }
