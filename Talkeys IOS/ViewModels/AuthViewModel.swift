@@ -51,11 +51,15 @@ class AuthViewModel: ObservableObject {
             
             // Quick local token validation first
             if TokenManager.shared.isTokenValid() {
+                print("🔍 Valid token found, checking with backend...")
+                
                 do {
                     let authState = try await authRepository.checkExistingAuth()
                     
                     if let successState = authState as? AuthState.Success {
                         // User already logged in
+                        print("✅ Backend authentication successful for: \(successState.user.name)")
+                        
                         await updateAuthState(
                             isLoggedIn: true,
                             user: successState.user,
@@ -64,18 +68,23 @@ class AuthViewModel: ObservableObject {
                         
                         GoogleSignInManager.shared.updateSignInStatus(true)
                         
-                        // Show welcome message briefly
-                        await showToastMessage("Welcome back \(successState.user.name)!")
+                        // Show welcome message briefly (only if not in main app check)
+                        if !isCheckingToken {
+                            await showToastMessage("Welcome back \(successState.user.name)!")
+                        }
                     } else {
                         // Token exists but auth failed, clear it
+                        print("❌ Backend authentication failed, clearing token")
                         await handleAuthFailure("Authentication expired")
                     }
                 } catch {
                     // Error checking auth, clear token and show login
-                    await handleAuthFailure("Authentication check failed: \(error.localizedDescription)")
+                    print("❌ Error checking authentication: \(error.localizedDescription)")
+                    await handleAuthFailure("Authentication check failed")
                 }
             } else {
                 // No valid token, show login screen
+                print("❌ No valid token found")
                 await updateAuthState(isLoggedIn: false, user: nil)
                 GoogleSignInManager.shared.updateSignInStatus(false)
             }

@@ -154,31 +154,67 @@ struct ExploreEventsView: View {
     
     // MARK: - Loading View
     private var loadingView: some View {
-        VStack(spacing: 0) {
-            ForEach(0..<3, id: \.self) { _ in
-                LoadingCategorySection()
-                    .padding(.bottom, 16)
+        ScrollView {
+            LazyVStack(spacing: 24) {
+                ForEach(0..<4, id: \.self) { index in
+                    LoadingCategorySection()
+                        .animation(
+                            Animation.easeInOut(duration: 0.8)
+                                .delay(Double(index) * 0.2),
+                            value: index
+                        )
+                }
+                
+                // Bottom spacing to match real content
+                Spacer()
+                    .frame(height: 8)
             }
-            Spacer()
+            .padding(.top, 16)
+            .padding(.bottom, 100) // Match real content bottom padding
         }
-        .padding(.top, 16)
     }
     
     struct LoadingCategorySection: View {
+        @State private var titleAnimating = false
+        
         var body: some View {
             VStack(alignment: .leading, spacing: 0) {
-                // Loading category title
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
-                    .frame(width: 120, height: 20)
+                // Loading category title - matches real category title
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4),
+                                Color(red: 80/255, green: 80/255, blue: 80/255).opacity(0.6),
+                                Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4)
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .frame(width: 140, height: 18) // Match category title size
                     .padding(.leading, 16)
                     .padding(.bottom, 12)
+                    .scaleEffect(titleAnimating ? 1.02 : 1.0)
+                    .opacity(titleAnimating ? 0.8 : 0.5)
+                    .animation(
+                        Animation.easeInOut(duration: 1.2).repeatForever(autoreverses: true),
+                        value: titleAnimating
+                    )
+                    .onAppear {
+                        titleAnimating = true
+                    }
                 
-                // Loading cards row
+                // Loading cards row - matches real horizontal scroll
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
-                        ForEach(0..<3, id: \.self) { _ in
+                        ForEach(0..<4, id: \.self) { index in
                             SkeletonEventCard()
+                                .animation(
+                                    Animation.easeInOut(duration: 1.0)
+                                        .delay(Double(index) * 0.1),
+                                    value: titleAnimating
+                                )
                         }
                     }
                     .padding(.leading, 16)
@@ -189,21 +225,122 @@ struct ExploreEventsView: View {
     }
     
     struct SkeletonEventCard: View {
+        @State private var isAnimating = false
+        @State private var shimmerOffset: CGFloat = -200
+        
         var body: some View {
-            VStack(alignment: .leading, spacing: 8) {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
-                    .frame(width: 160, height: 200)
+            VStack(spacing: 0) {
+                // Image placeholder - matches EventCard image dimensions
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.3),
+                                Color(red: 80/255, green: 80/255, blue: 80/255).opacity(0.5),
+                                Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.3)
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .frame(width: 161, height: 165) // Match EventCard focused dimensions
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
                 
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
-                    .frame(width: 120, height: 16)
-                
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.6))
-                    .frame(width: 80, height: 12)
+                // Content section - matches EventCard content area
+                VStack(alignment: .leading, spacing: 6) {
+                    // Title placeholder
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4))
+                        .frame(width: 140, height: 14)
+                    
+                    // Second line of title
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.3))
+                        .frame(width: 100, height: 14)
+                    
+                    // Location row placeholder
+                    HStack(spacing: 4) {
+                        Circle()
+                            .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4))
+                            .frame(width: 12, height: 12)
+                        
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4))
+                            .frame(width: 80, height: 10)
+                    }
+                    
+                    // Date row placeholder
+                    HStack(spacing: 4) {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4))
+                            .frame(width: 12, height: 12)
+                        
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4))
+                            .frame(width: 90, height: 10)
+                    }
+                    
+                    // Tags row placeholder
+                    HStack(spacing: 6) {
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4))
+                            .frame(width: 40, height: 16)
+                        
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color(red: 64/255, green: 64/255, blue: 64/255).opacity(0.4))
+                            .frame(width: 35, height: 16)
+                    }
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 12)
+                .frame(width: 165, alignment: .leading) // Match EventCard width
             }
-            .frame(width: 160)
+            .frame(width: 165, height: 286) // Match EventCard total dimensions
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(red: 40/255, green: 40/255, blue: 40/255).opacity(0.6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+            )
+            .overlay(
+                // Shimmer effect
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.clear,
+                                Color.white.opacity(0.1),
+                                Color.clear
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .offset(x: shimmerOffset)
+                    .animation(
+                        Animation.linear(duration: 1.5).repeatForever(autoreverses: false),
+                        value: shimmerOffset
+                    )
+            )
+            .clipped()
+            .scaleEffect(isAnimating ? 1.01 : 1.0)
+            .opacity(isAnimating ? 0.8 : 0.6)
+            .animation(
+                Animation.easeInOut(duration: 2.0).repeatForever(autoreverses: true),
+                value: isAnimating
+            )
+            .onAppear {
+                isAnimating = true
+                // Start shimmer animation
+                withAnimation(Animation.linear(duration: 1.5).repeatForever(autoreverses: false)) {
+                    shimmerOffset = 200
+                }
+            }
         }
     }
     

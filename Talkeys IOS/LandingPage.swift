@@ -110,6 +110,12 @@ struct LandingPage: View {
         .onAppear {
             // Sync with AuthViewModel state
             syncAuthState()
+            
+            // Only check auth if we're not already logged in
+            // (Main app handles initial auth check)
+            if !authViewModel.isLoggedIn && !authViewModel.isCheckingToken {
+                authViewModel.checkExistingAuth()
+            }
         }
         .onChange(of: authViewModel.isLoggedIn) { newValue in
             // Sync navigation state with AuthViewModel
@@ -166,18 +172,34 @@ class TokenManager {
     /// Check if token is valid (equivalent to Android's isTokenValid)
     func isTokenValid() -> Bool {
         guard let token = userDefaults.string(forKey: tokenKey), !token.isEmpty else {
+            print("❌ No token found in storage")
             return false
         }
         
         // Check expiry (optional, similar to Android logic)
         let expiryTime = userDefaults.double(forKey: tokenExpiryKey)
         if expiryTime > 0 && Date().timeIntervalSince1970 > expiryTime {
-            print("⚠️ Token expired")
+            print("⚠️ Token expired at \(Date(timeIntervalSince1970: expiryTime))")
             _ = clearToken() // Clear expired token
             return false
         }
         
+        print("✅ Valid token found (expires: \(expiryTime > 0 ? Date(timeIntervalSince1970: expiryTime).description : "never"))")
         return true
+    }
+    
+    /// Get token expiry date for debugging
+    func getTokenExpiry() -> Date? {
+        let expiryTime = userDefaults.double(forKey: tokenExpiryKey)
+        return expiryTime > 0 ? Date(timeIntervalSince1970: expiryTime) : nil
+    }
+    
+    /// Force clear tokens for testing (call manually when needed)
+    func clearTokensForTesting() {
+        print("🧪 DEBUG: Manually clearing tokens for testing")
+        _ = clearToken()
+        GIDSignIn.sharedInstance.signOut()
+        print("🧪 DEBUG: Tokens cleared")
     }
 }
 

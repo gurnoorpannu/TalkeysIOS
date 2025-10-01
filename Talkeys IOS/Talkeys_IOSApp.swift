@@ -68,10 +68,14 @@ struct Talkeys_IOSApp: App {
 
 struct MainAppView: View {
     @State private var isLoggedIn = false
+    @State private var isCheckingAuth = true
     
     var body: some View {
         Group {
-            if isLoggedIn {
+            if isCheckingAuth {
+                // Show loading screen while checking authentication
+                SplashLoadingView()
+            } else if isLoggedIn {
                 // Navigate to ExploreEventsView after successful authentication
                 ExploreEventsView()
             } else {
@@ -81,17 +85,83 @@ struct MainAppView: View {
         }
         .animation(.easeInOut, value: isLoggedIn)
         .onAppear {
-            // For testing: Clear any existing tokens to ensure fresh start
-            // Comment this out in production to enable auto-login
-            clearTokensForTesting()
+            checkExistingAuthentication()
         }
     }
     
+    private func checkExistingAuthentication() {
+        print("🔍 Checking existing authentication...")
+        
+        // Check if we have a valid token stored locally
+        if TokenManager.shared.isTokenValid() {
+            print("✅ Valid token found, attempting auto-login...")
+            
+            // Create AuthViewModel to check backend authentication
+            let authViewModel = AuthViewModel()
+            
+            Task {
+                // Wait for AuthViewModel to complete its authentication check
+                while authViewModel.isCheckingToken {
+                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                }
+                
+                await MainActor.run {
+                    // Check if AuthViewModel successfully authenticated
+                    if authViewModel.isLoggedIn {
+                        print("✅ Auto-login successful")
+                        isLoggedIn = true
+                    } else {
+                        print("❌ Auto-login failed, showing login screen")
+                        isLoggedIn = false
+                    }
+                    isCheckingAuth = false
+                }
+            }
+        } else {
+            print("❌ No valid token found, showing login screen")
+            isLoggedIn = false
+            isCheckingAuth = false
+        }
+    }
+    
+    // MARK: - Debug Methods (for manual testing)
+    
+    /// Call this method manually for testing token clearing
+    /// Usage: In Xcode debugger or by adding a temporary button
     private func clearTokensForTesting() {
-        print("🧪 DEBUG: Clearing tokens for fresh testing experience")
-        let _ = TokenManager.shared.clearToken()
-        GIDSignIn.sharedInstance.signOut()
-        print("🧪 DEBUG: Tokens cleared - app will show landing page")
+        print("🧪 DEBUG: Manually clearing tokens for testing")
+        TokenManager.shared.clearTokensForTesting()
+        isLoggedIn = false
+        isCheckingAuth = false
+    }
+}
+
+// Splash loading view while checking authentication
+struct SplashLoadingView: View {
+    var body: some View {
+        ZStack {
+            // Background Image (same as landing page)
+            Image("splash_bg")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .ignoresSafeArea()
+            
+            VStack {
+                Spacer()
+                
+                // Loading indicator
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .scaleEffect(1.5)
+                
+                Text("Checking authentication...")
+                    .font(.system(size: 16))
+                    .foregroundColor(.white.opacity(0.8))
+                    .padding(.top, 16)
+                
+                Spacer()
+            }
+        }
     }
 }
 
